@@ -1,4 +1,4 @@
-package com.springkafka.demo;
+package com.springkafka.demo.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

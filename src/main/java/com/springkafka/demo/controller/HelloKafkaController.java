@@ -66,4 +66,12 @@ public class HelloKafkaController {
         latch.countDown();
     }
 
+    @KafkaListener(topics = "advice-topic", clientIdPrefix = "bytearray",
+            containerFactory = "kafkaListenerByteArrayContainerFactory")
+    public void listenAsByteArray(ConsumerRecord<String, byte[]> cr,
+                                  @Payload byte[] payload) {
+        logger.info("Logger 3 [ByteArray] received key {}: Type [{}] | Payload: {} | Record: {}", cr.key(),
+                typeIdHeader(cr.headers()), payload, cr.toString());
+        latch.countDown();
+    }
 }

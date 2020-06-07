@@ -126,4 +126,12 @@ public class DemoApplication {
         );
     }
 
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, byte[]> kafkaListenerByteArrayContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, byte[]> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(byteArrayConsumerFactory());
+        return factory;
+    }
+
 }

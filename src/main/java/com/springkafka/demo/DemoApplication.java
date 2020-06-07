@@ -117,4 +117,13 @@ public class DemoApplication {
         return factory;
     }
 
+    // Byte Array Consumer Configuration
+
+    @Bean
+    public ConsumerFactory<String, byte[]> byteArrayConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                kafkaProperties.buildConsumerProperties(), new StringDeserializer(), new ByteArrayDeserializer()
+        );
+    }
+
 }

@@ -3,6 +3,7 @@ package com.springkafka.demo.controller;
 
 import com.springkafka.demo.config.PracticalAdvice;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.header.Headers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class HelloKafkaController {
@@ -73,5 +75,11 @@ public class HelloKafkaController {
         logger.info("Logger 3 [ByteArray] received key {}: Type [{}] | Payload: {} | Record: {}", cr.key(),
                 typeIdHeader(cr.headers()), payload, cr.toString());
         latch.countDown();
+    }
+
+    private static String typeIdHeader(Headers headers) {
+        return StreamSupport.stream(headers.spliterator(), false)
+                .filter(header -> header.key().equals("__TypeId__"))
+                .findFirst().map(header -> new String(header.value())).orElse("N/A");
     }
 }

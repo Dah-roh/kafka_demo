@@ -31,6 +31,28 @@ public class DemoApplication {
     @Value("${tpd.topic-name}")
     private String topicName;
 
+    // Producer configuration
+    // omitted...
+
+    // Consumer configuration
+
+    // If you only need one kind of deserialization, you only need to set the
+    // Consumer configuration properties. Uncomment this and remove all others below.
+//    @Bean
+//    public Map<String, Object> consumerConfigs() {
+//        Map<String, Object> props = new HashMap<>(
+//                kafkaProperties.buildConsumerProperties()
+//        );
+//        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+//                StringDeserializer.class);
+//        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+//                JsonDeserializer.class);
+//        props.put(ConsumerConfig.GROUP_ID_CONFIG,
+//                "tpd-loggers");
+//
+//        return props;
+//    }
+
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props =
@@ -75,4 +97,24 @@ public class DemoApplication {
 
         return factory;
     }
+
+
+    // String Consumer Configuration
+
+    @Bean
+    public ConsumerFactory<String, String> stringConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                kafkaProperties.buildConsumerProperties(), new StringDeserializer(), new StringDeserializer()
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerStringContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(stringConsumerFactory());
+
+        return factory;
+    }
+
 }
